@@ -8,11 +8,13 @@ THEMES_URL = "https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Them
 
 doc = Nokogiri::HTML(open(THEMES_URL))
 
-Dir.mkdir('_posts') unless File.directory?('_posts')
+%w(_posts screenshots).each do |folder|
+  Dir.mkdir(folder) unless File.directory?(folder)
+end
 
 year = 2015
 
-doc.xpath("//table//tbody//tr").each do |tr|
+doc.xpath("//table//tbody//tr")[0..1].each do |tr|
   tds = tr.xpath("./td")
 
   first_td  = tds[0]
@@ -57,6 +59,9 @@ doc.xpath("//table//tbody//tr").each do |tr|
     f.write("---")
   end
 
+  if post[:demo_preview]
+    `webkit2png -C --clipwidth=400 --clipheight=300 --dir="screenshots" --filename="#{post[:slug]}" #{post[:demo_preview]}`
+  end
 end
 
 # def write_to_console(post)
