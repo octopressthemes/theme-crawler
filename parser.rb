@@ -10,6 +10,8 @@ doc = Nokogiri::HTML(open(THEMES_URL))
 
 Dir.mkdir('_posts') unless File.directory?('_posts')
 
+year = 2015
+
 doc.xpath("//table//tbody//tr").each do |tr|
   tds = tr.xpath("./td")
 
@@ -26,6 +28,8 @@ doc.xpath("//table//tbody//tr").each do |tr|
   if post[:title] =~ /nigspress/
     post[:title] = "Konigspress"
   end
+
+  post[:slug] = post[:title].underscore.dasherize
 
   post[:github_link] = first_td.xpath("./a")[0].attributes['href'].value
 
@@ -47,7 +51,8 @@ doc.xpath("//table//tbody//tr").each do |tr|
 
   post[:description] = third_td.text
 
-  File.open("_posts/2014-12-02-#{post[:title].underscore.dasherize}.md", 'w') do |f|
+  year = year - 1
+  File.open("_posts/#{year}-12-02-#{post[:slug]}.md", 'w') do |f|
     f.write(post.to_yaml.gsub("\n:", "\n"))
     f.write("---")
   end
