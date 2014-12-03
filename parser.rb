@@ -48,7 +48,7 @@ doc.xpath("//table//tbody//tr").each do |tr|
   post[:description] = third_td.text
 
   File.open("_posts/2014-12-02-#{post[:title].underscore.dasherize}.md", 'w') do |f|
-    YAML.dump(post, f)
+    f.write(post.to_yaml.gsub("\n:", "\n"))
     f.write("---")
   end
 
